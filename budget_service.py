@@ -5,34 +5,34 @@ from dateutil.relativedelta import relativedelta
 
 
 class BudgetService:
-    def getSingleDayAmount(self, year, month):
-        startYearMonth = "{:04d}{:02d}".format(year, month)
-        records = BudgetRepo().getAll()
+    def get_single_day_amount(self, year, month):
+        start_year_month = "{:04d}{:02d}".format(year, month)
+        records = BudgetRepo().get_all()
         for record in records:
-            if record.YearMonth == startYearMonth:
-                monthTotoldays = self.getDaysInMonth(year, month)
-                return record.Amount / monthTotoldays
+            if record.year_month == start_year_month:
+                month_total_days = self.get_days_in_month(year, month)
+                return record.amount / month_total_days
 
         return 0
 
-    def getDaysInMonth(self, year, month):
+    def get_days_in_month(self, year, month):
         return calendar.monthrange(year, month)[1]
 
-    def totalAmount(self, start, end):
+    def total_amount(self, start, end):
 
         if start > end:
             return 0
 
         if start.year == end.year and start.month == end.month:
-            return self.getSingleDayAmount(start.year, start.month) * (end.day - start.day + 1)
+            return self.get_single_day_amount(start.year, start.month) * (end.day - start.day + 1)
 
-        total = self.getSingleDayAmount(start.year, start.month) * (
-                self.getDaysInMonth(start.year, start.month) - start.day + 1) + self.getSingleDayAmount(end.year,
-                                                                                                        end.month) * end.day
+        total = self.get_single_day_amount(start.year, start.month) * (
+                self.get_days_in_month(start.year, start.month) - start.day + 1) + self.get_single_day_amount(end.year,
+                                                                                                              end.month) * end.day
         current_date = start + relativedelta(months=1)
         end_month = datetime.date(end.year, end.month, 1)
         while current_date < end_month:
-            total += self.getSingleDayAmount(current_date.year, current_date.month) * self.getDaysInMonth(
+            total += self.get_single_day_amount(current_date.year, current_date.month) * self.get_days_in_month(
                 current_date.year,
                 current_date.month)
             current_date += relativedelta(months=1)
@@ -41,16 +41,16 @@ class BudgetService:
 
 
 class Budget:
-    YearMonth: str
-    Amount: int
+    year_month: str
+    amount: int
 
-    def __init__(self, YearMonth, Amount):
-        self.YearMonth = YearMonth
-        self.Amount = Amount
+    def __init__(self, year_month, amount):
+        self.year_month = year_month
+        self.amount = amount
 
 
 class BudgetRepo:
-    def getAll(self):
+    def get_all(self):
         return [
             Budget("202405", 310),
             Budget("202406", 300),
