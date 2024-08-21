@@ -80,14 +80,12 @@ class BudgetService:
         if start > end:
             return 0
 
-        # if start.year == end.year and start.month == end.month:
-        #     return self.get_single_day_amount(start.year, start.month) * (end.day - start.day + 1)
-
-        total_amount = 0
+        # total_amount = 0
 
         budgets = BudgetRepo().get_all()
         period = Period(start, end)
-        for budget in budgets:
-            total_amount += budget.overlapping_amount(period)
-
-        return total_amount
+        return sum(map(lambda b: b.overlapping_amount(period), budgets))
+        # for budget in budgets:
+        #     total_amount += budget.overlapping_amount(period)
+        #
+        # return total_amount
