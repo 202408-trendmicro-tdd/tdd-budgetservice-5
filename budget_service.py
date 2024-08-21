@@ -5,6 +5,41 @@ from typing import List
 from dateutil.relativedelta import relativedelta
 
 
+class Budget:
+    year_month: str
+    amount: int
+
+    def __init__(self, year_month, amount):
+        self.year_month = year_month
+        self.amount = amount
+
+    def get_days(self):
+        first_day = self.first_day()
+        return calendar.monthrange(first_day.year, first_day.month)[1]
+
+    def daily_amount(self):
+        return self.amount / self.get_days()
+
+    def last_day(self):
+        first_day = self.first_day()
+        return datetime.date(first_day.year, first_day.month, self.get_days())
+
+    def first_day(self):
+        return datetime.datetime.strptime(self.year_month, '%Y%m').date()
+
+
+class BudgetRepo:
+    def get_all(self) -> List[Budget]:
+        return [
+            Budget("202405", 310),
+            Budget("202406", 300),
+            Budget("202407", 310),
+            Budget("202408", 310),
+            Budget("202505", 310),
+            Budget("202508", 310),
+        ]
+
+
 class Period:
 
     def __init__(self, start: datetime.date, end: datetime.date):
@@ -12,16 +47,17 @@ class Period:
         self.end = end
         self.start = start
 
-    def overlapping_days(self, budget):
+    def overlapping_days(self, budget: Budget):
+        overlapping_start = self.start if self.start > budget.first_day() else budget.first_day()
         if budget.year_month == self.start.strftime('%Y%m'):
             overlapping_end = budget.last_day()
-            overlapping_start = self.start
+            # overlapping_start = self.start
         elif budget.year_month == self.end.strftime('%Y%m'):
             overlapping_end = self.end
-            overlapping_start = budget.first_day()
+            # overlapping_start = budget.first_day()
         else:
             overlapping_end = budget.last_day()
-            overlapping_start = budget.first_day()
+            # overlapping_start = budget.first_day()
         return (overlapping_end - overlapping_start).days + 1
 
 
@@ -63,38 +99,3 @@ class BudgetService:
             current_date += relativedelta(months=1)
 
         return total_amount
-
-
-class Budget:
-    year_month: str
-    amount: int
-
-    def __init__(self, year_month, amount):
-        self.year_month = year_month
-        self.amount = amount
-
-    def get_days(self):
-        first_day = self.first_day()
-        return calendar.monthrange(first_day.year, first_day.month)[1]
-
-    def daily_amount(self):
-        return self.amount / self.get_days()
-
-    def last_day(self):
-        first_day = self.first_day()
-        return datetime.date(first_day.year, first_day.month, self.get_days())
-
-    def first_day(self):
-        return datetime.datetime.strptime(self.year_month, '%Y%m').date()
-
-
-class BudgetRepo:
-    def get_all(self) -> List[Budget]:
-        return [
-            Budget("202405", 310),
-            Budget("202406", 300),
-            Budget("202407", 310),
-            Budget("202408", 310),
-            Budget("202505", 310),
-            Budget("202508", 310),
-        ]
