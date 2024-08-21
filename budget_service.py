@@ -37,10 +37,11 @@ class BudgetService:
         while current_date < end_month:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
             if budget is not None:
-                if current_date.strftime('%Y%m') == start.strftime('%Y%m'):
+                if budget.year_month == start.strftime('%Y%m'):
+                    # if current_date.strftime('%Y%m') == start.strftime('%Y%m'):
                     overlapping_end = budget.last_day()
                     overlapping_start = start
-                elif current_date.strftime('%Y%m') == end.strftime('%Y%m'):
+                elif budget.year_month == end.strftime('%Y%m'):
                     overlapping_end = end
                     overlapping_start = budget.first_day()
                 else:
