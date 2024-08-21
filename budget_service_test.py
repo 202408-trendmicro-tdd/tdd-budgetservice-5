@@ -3,11 +3,12 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
 
+
 def getDaysInMonth(year, month):
     return calendar.monthrange(year, month)[1]
 
+
 def getSingleDayAmount(year, month):
-    # format year month to "102405"
     startYearMonth = "{:04d}{:02d}".format(year, month)
     records = BudgetRepo().getAll()
     for record in records:
@@ -17,9 +18,9 @@ def getSingleDayAmount(year, month):
 
     return 0
 
+
 class BudgetService:
     def totalAmount(self, start, end):
-        repo = BudgetRepo()
 
         if start > end:
             return 0
@@ -27,17 +28,17 @@ class BudgetService:
         if start.year == end.year and start.month == end.month:
             return getSingleDayAmount(start.year, start.month) * (end.day - start.day + 1)
 
-
-        total = getSingleDayAmount(start.year, start.month) * (getDaysInMonth(start.year, start.month) - start.day + 1) + getSingleDayAmount(end.year, end.month) * end.day
+        total = getSingleDayAmount(start.year, start.month) * (
+                getDaysInMonth(start.year, start.month) - start.day + 1) + getSingleDayAmount(end.year,
+                                                                                              end.month) * end.day
         current_date = start + relativedelta(months=1)
         end_month = datetime.date(end.year, end.month, 1)
         while current_date < end_month:
-            total += getSingleDayAmount(current_date.year, current_date.month) * getDaysInMonth(current_date.year, current_date.month)
+            total += getSingleDayAmount(current_date.year, current_date.month) * getDaysInMonth(current_date.year,
+                                                                                                current_date.month)
             current_date += relativedelta(months=1)
 
         return total
-
-        #return getSingleDayAmount(start.year, start.month) * (getDaysInMonth(start.year, start.month) - start.day + 1) + getSingleDayAmount(end.year, end.month) * end.day
 
 
 class Budget:
@@ -47,6 +48,7 @@ class Budget:
     def __init__(self, YearMonth, Amount):
         self.YearMonth = YearMonth
         self.Amount = Amount
+
 
 class BudgetRepo:
     def getAll(self):
@@ -58,6 +60,7 @@ class BudgetRepo:
             Budget("202505", 310),
             Budget("202508", 310),
         ]
+
 
 class BudgetServiceTestCase(unittest.TestCase):
 
@@ -109,6 +112,7 @@ class BudgetServiceTestCase(unittest.TestCase):
         end = datetime.date(2025, 8, 31)
         res = budgetService.totalAmount(start, end)
         self.assertEqual(940, res)
+
 
 if __name__ == '__main__':
     unittest.main()
