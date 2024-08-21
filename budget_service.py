@@ -12,6 +12,18 @@ class Period:
         self.end = end
         self.start = start
 
+    def overlapping_days(self, budget):
+        if budget.year_month == self.start.strftime('%Y%m'):
+            overlapping_end = budget.last_day()
+            overlapping_start = self.start
+        elif budget.year_month == self.end.strftime('%Y%m'):
+            overlapping_end = self.end
+            overlapping_start = budget.first_day()
+        else:
+            overlapping_end = budget.last_day()
+            overlapping_start = budget.first_day()
+        return (overlapping_end - overlapping_start).days + 1
+
 
 class BudgetService:
     def get_single_day_amount(self, year, month):
@@ -46,23 +58,11 @@ class BudgetService:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
             if budget is not None:
                 period = Period(start, end)
-                overlapping_days = self.overlapping_days(budget, period)
+                overlapping_days = period.overlapping_days(budget)
                 total_amount += budget.daily_amount() * overlapping_days
             current_date += relativedelta(months=1)
 
         return total_amount
-
-    def overlapping_days(self, budget, period):
-        if budget.year_month == period.start.strftime('%Y%m'):
-            overlapping_end = budget.last_day()
-            overlapping_start = period.start
-        elif budget.year_month == period.end.strftime('%Y%m'):
-            overlapping_end = period.end
-            overlapping_start = budget.first_day()
-        else:
-            overlapping_end = budget.last_day()
-            overlapping_start = budget.first_day()
-        return (overlapping_end - overlapping_start).days + 1
 
 
 class Budget:
