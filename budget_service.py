@@ -5,6 +5,10 @@ from typing import List
 from dateutil.relativedelta import relativedelta
 
 
+class Period:
+    pass
+
+
 class BudgetService:
     def get_single_day_amount(self, year, month):
         start_year_month = "{:04d}{:02d}".format(year, month)
@@ -44,6 +48,7 @@ class BudgetService:
         return total_amount
 
     def overlapping_days(self, budget, start, end):
+        period = Period(start, end)
         s = start
         e = end
         if budget.year_month == s.strftime('%Y%m'):
