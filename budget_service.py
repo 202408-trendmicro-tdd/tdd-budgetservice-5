@@ -18,7 +18,7 @@ class BudgetService:
     def get_days_in_month(self, year, month):
         return calendar.monthrange(year, month)[1]
 
-    def total_amount(self, start, end):
+    def total_amount(self, start: datetime.date, end: datetime.date):
 
         if start > end:
             return 0
