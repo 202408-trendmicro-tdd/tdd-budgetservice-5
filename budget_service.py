@@ -83,21 +83,11 @@ class BudgetService:
         if start.year == end.year and start.month == end.month:
             return self.get_single_day_amount(start.year, start.month) * (end.day - start.day + 1)
 
-        # total_amount_of_end = self.get_single_day_amount(end.year, end.month) * end.day
-        # total_amount = total_amount_of_end
         total_amount = 0
 
-        current_date = start
-        end_month = datetime.date(end.year, end.month, 1) + relativedelta(months=+1)
         budgets = BudgetRepo().get_all()
         period = Period(start, end)
         for budget in budgets:
             total_amount += budget.overlapping_amount(period)
-        #
-        # while current_date < end_month:
-        #     budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
-        #     if budget is not None:
-        #         total_amount += budget.overlapping_amount(period)
-        #     current_date += relativedelta(months=1)
 
         return total_amount
