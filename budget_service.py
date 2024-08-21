@@ -38,7 +38,8 @@ class BudgetService:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
             if budget is not None:
                 if current_date.strftime('%Y%m') == start.strftime('%Y%m'):
-                    overlapping_days = (self.get_days_in_month(start.year, start.month) - start.day + 1)
+                    overlapping_days = (budget.last_day() - start).days + 1
+                    # overlapping_days = (self.get_days_in_month(start.year, start.month) - start.day + 1)
                 elif current_date.strftime('Y%m') == end.strftime('Y%m'):
                     overlapping_days = end.day
                 else:
@@ -63,6 +64,10 @@ class Budget:
 
     def daily_amount(self):
         return self.amount / self.get_days()
+
+    def last_day(self):
+        first_day = datetime.datetime.strptime(self.year_month, '%Y%m').date()
+        return datetime.date(first_day.year, first_day.month, self.get_days())
 
 
 class BudgetRepo:
