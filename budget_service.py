@@ -26,18 +26,18 @@ class BudgetService:
         if start.year == end.year and start.month == end.month:
             return self.get_single_day_amount(start.year, start.month) * (end.day - start.day + 1)
 
-        total = self.get_single_day_amount(start.year, start.month) * (
+        total_amount = self.get_single_day_amount(start.year, start.month) * (
                 self.get_days_in_month(start.year, start.month) - start.day + 1) + self.get_single_day_amount(end.year,
                                                                                                               end.month) * end.day
         current_date = start + relativedelta(months=1)
         end_month = datetime.date(end.year, end.month, 1)
         while current_date < end_month:
-            total += self.get_single_day_amount(current_date.year, current_date.month) * self.get_days_in_month(
+            total_amount += self.get_single_day_amount(current_date.year, current_date.month) * self.get_days_in_month(
                 current_date.year,
                 current_date.month)
             current_date += relativedelta(months=1)
 
-        return total
+        return total_amount
 
 
 class Budget:
