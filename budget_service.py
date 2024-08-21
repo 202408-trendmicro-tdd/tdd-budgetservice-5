@@ -86,9 +86,12 @@ class BudgetService:
         while current_date < end_month:
             budget = next(filter(lambda b: b.year_month == current_date.strftime('%Y%m'), budgets), None)
             if budget is not None:
-                another = Period(budget.first_day(), budget.last_day())
+                another = self.create_period(budget)
                 overlapping_days = period.overlapping_days(another)
                 total_amount += budget.daily_amount() * overlapping_days
             current_date += relativedelta(months=1)
 
         return total_amount
+
+    def create_period(self, budget):
+        return Period(budget.first_day(), budget.last_day())
