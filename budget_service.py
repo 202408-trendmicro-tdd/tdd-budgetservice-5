@@ -6,7 +6,11 @@ from dateutil.relativedelta import relativedelta
 
 
 class Period:
-    pass
+
+    def __init__(self, start: datetime.date, end: datetime.date):
+        super().__init__()
+        self.end = end
+        self.start = start
 
 
 class BudgetService:
