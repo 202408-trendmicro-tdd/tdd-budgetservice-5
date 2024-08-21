@@ -50,12 +50,6 @@ class Period:
     def overlapping_days(self, budget: Budget):
         overlapping_start = self.start if self.start > budget.first_day() else budget.first_day()
         overlapping_end = self.end if self.end < budget.last_day() else budget.last_day()
-        # if budget.year_month == self.start.strftime('%Y%m'):
-        #     overlapping_end = budget.last_day()
-        # elif budget.year_month == self.end.strftime('%Y%m'):
-        #     overlapping_end = self.end
-        # else:
-        #     overlapping_end = budget.last_day()
         return (overlapping_end - overlapping_start).days + 1
 
 
