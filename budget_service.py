@@ -1,5 +1,6 @@
 import calendar
 import datetime
+from typing import List
 
 from dateutil.relativedelta import relativedelta
 
@@ -62,7 +63,7 @@ class Budget:
 
 
 class BudgetRepo:
-    def get_all(self):
+    def get_all(self) -> List[Budget]:
         return [
             Budget("202405", 310),
             Budget("202406", 300),
